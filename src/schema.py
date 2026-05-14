@@ -18,5 +18,5 @@ class Grade(BaseModel):
     @classmethod
     def validate_grade(cls, v: Any):
         if v < 2 or v > 5:
-            raise ValueError("Оценка должны быть от 1 до 5")
+            raise ValueError("Оценка должна быть от 1 до 5")
         return v

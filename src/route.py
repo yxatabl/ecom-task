@@ -2,6 +2,7 @@ from fastapi import APIRouter, status, UploadFile, File, HTTPException
 import csv
 from src import model
 import io
+from pydantic import ValidationError
 
 router = APIRouter()
 
@@ -23,7 +24,12 @@ async def upload_grades(file: UploadFile = File(...)):
     if not grades_list:
         raise HTTPException(status_code=400, detail="Файл пустой или неверного формата")
 
-    students, grades = await model.save_grades(grades_list)
+    try:
+        students, grades = await model.save_grades(grades_list)
+    except ValidationError as err:
+        raise HTTPException(status_code=422, detail=f"Ошибки валидации: {[e['msg'] for e in err.errors()]}")
+    except ValueError as err:
+        raise HTTPException(status_code=422, detail=f"Ошибка валидации: {str(err)}")
 
     return {
         "status": "ok",

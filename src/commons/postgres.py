@@ -10,8 +10,7 @@ class Postgres:
         self.pool = None
     
     async def connect(self):
-        if not self.pool:
-            self.pool = await asyncpg.create_pool(self.db_url)
+        self.pool = await asyncpg.create_pool(self.db_url)
     
     async def disconnect(self):
         if self.pool:
