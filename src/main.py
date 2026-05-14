@@ -8,12 +8,19 @@ from src.route import router
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await database.connect()
+    async with database.pool.acquire() as conn:
+        await conn.execute("CREATE SCHEMA IF NOT EXISTS public")
     await migrate.apply_pending_migrations()
     yield
     await database.disconnect()
 
 app = FastAPI(
     docs_url='/docs',
+    title="Анализ оценок студентов",
+    openapi_tags=[
+        {'name': "grades", 'description': "Загрузка оценок"},
+        {'name': "students", 'description': "Получение статистики по студентам"}
+    ],
     lifespan=lifespan
 )
 
