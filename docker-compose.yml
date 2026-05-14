@@ -1,0 +1,33 @@
+services:
+  database:
+    image: postgres:18-alpine
+    container_name: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: grades
+      PGDATA: /var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d grades"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+  
+  web:
+    build: .
+    container_name: web
+    ports:
+      - "8000:8000"
+    environment:
+      - DB_URL=postgresql://postgres:postgres@database:5432/grades
+    depends_on:
+      database:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+    driver: local
