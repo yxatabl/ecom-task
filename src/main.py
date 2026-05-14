@@ -8,8 +8,6 @@ from src.route import router
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await database.connect()
-    async with database.pool.acquire() as conn:
-        await conn.execute("CREATE SCHEMA IF NOT EXISTS public")
     await migrate.apply_pending_migrations()
     yield
     await database.disconnect()
