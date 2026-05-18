@@ -3,6 +3,7 @@ import csv
 from src import model
 import io
 from pydantic import ValidationError
+from parser import parse_file
 
 router = APIRouter()
 
@@ -40,14 +41,7 @@ async def upload_grades(
         raise HTTPException(status_code=400, detail="Разрешены только csv файлы")
     
     data = await file.read()
-    data_decoded = data.decode('utf-8')
-    reader = csv.reader(io.StringIO(data_decoded), delimiter=';')
-    next(reader, None)
-
-    grades_list = []
-    for row in reader:
-        if len(row) >= 4:
-            grades_list.append((row[0], row[1], row[2], row[3]))
+    grades_list = parse_file(data)
     
     if not grades_list:
         raise HTTPException(status_code=400, detail="Файл пустой или неверного формата")
