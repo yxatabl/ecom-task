@@ -1,4 +1,4 @@
-name: Run Automated Tests
+name: Run Tests
 
 
 on:
@@ -17,9 +17,9 @@ jobs:
 
       - name: Run tests via Docker Compose
         run: |
-          docker-compose -f docker-compose.test.yml up --build --abort-on-container-exit
+          docker compose -f docker-compose.test.yml up --build --abort-on-container-exit
 
       - name: Сlean up containers
         if: always()
         run: |
-          docker-compose -f docker-compose.test.yml down -v
+          docker compose -f docker-compose.test.yml down -v
