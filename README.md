@@ -7,20 +7,47 @@
 
 ## Функционал
 - Принимает csv-файл и сохраняет данные в PostgreSQL
-- Выполняет валидацию данных
+- Валидация данных
 - Предоставляет аналитические функции (создан простой механизм для фильтрации по оценкам, по заданию добавлено две конкретные ручки)
 - Работает без ORM
-- Реализованы тесты (запускаются с помощью GitHub Actions)
-- Испозьзует собственный механизм миграций (миграции добавляются в `/src/migrations`)
+- Реализованы тесты (запускаются с помощью GitHub Actions + доступен ручной запуск на тестовой бд)
+- Для миграций используется alembic
 - Swagger
 
 ## Запуск
+
+### Запуск через докер
 ```bash
 git clone https://github.com/yxatabl/ecom-task
 cd ecom-task
 docker compose up -d
 ```
 Swagger - `http://localhost:8000/docs`
+
+### Запуск локально
+```bash
+git clone https://github.com/yxatabl/ecom-task
+cd ecom-task
+uvicorn src.main:app --host 0.0.0.0 --port 8000
+```
+Важно: нужно активировать виртуальное окружение, поднять базу данных (и добавить строку для подключения в пременную окружения DB_URL в формате postgresql://<user>:<password>@address:port/<db_name>) и установить все зависимости из requirements.txt!
+
+## Запуск тестов
+### Запуск через докер
+```bash
+git clone https://github.com/yxatabl/ecom-task
+cd ecom-task
+docker compose -f docker-compose.test.yml up --build --abort-on-container-exit
+```
+
+### Запуск локально
+```bash
+git clone https://github.com/yxatabl/ecom-task
+cd ecom-task
+pytest -v
+```
+Важно: нужно активировать виртуальное окружение, поднять базу данных (и добавить строку для подключения в пременную окружения DB_URL в формате postgresql://<user>:<password>@address:port/<db_name>) и установить все зависимости из requirements.txt!
+
 
 ## Схема БД
 ```sql
