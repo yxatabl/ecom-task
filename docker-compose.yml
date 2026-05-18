@@ -18,12 +18,15 @@ services:
       retries: 5
   
   web:
-    build: .
+    build:
+      context: .
+      target: production
     container_name: web
     ports:
       - "8000:8000"
     environment:
       - DB_URL=postgresql://postgres:postgres@database:5432/grades
+    command: sh -c "alembic upgrade head && uvicorn src.main:app --host 0.0.0.0 --port 8000"
     depends_on:
       database:
         condition: service_healthy
