@@ -1,12 +1,14 @@
 from contextlib import asynccontextmanager
 
+from asyncpg import Connection
+
 from src.commons.postgres import Postgres
 
 
 class UnitOfWork:
     def __init__(self, postgres: Postgres):
-        self.postgres = postgres
-        self.conn = None
+        self.postgres: Postgres = postgres
+        self.conn: Connection = None
     
     @asynccontextmanager
     async def transaction(self):
@@ -22,5 +24,5 @@ class UnitOfWork:
                     self.conn = None
     
     @property
-    def current_connection(self):
+    def current_connection(self) -> Connection:
         return self.conn

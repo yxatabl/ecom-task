@@ -17,7 +17,7 @@ class Postgres:
         if self.pool:
             self.pool.terminate()
     
-    def connection(self):
+    def connection(self) -> asyncpg.Connection:
         return self.pool.acquire()
 
 database = Postgres(DB_URL)
