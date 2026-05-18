@@ -31,7 +31,7 @@ async def test_import_grades_success():
         Grade(student=students[0], grade=2, date=datetime.strptime("16.05.2025", '%d.%m.%Y').date())
     ]
 
-    grades_added, students_added  = await service.save_grades(grades)
+    grades_added, students_added = await service.save_grades(grades)
 
     assert students_added == 3
     assert grades_added == 5
